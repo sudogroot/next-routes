@@ -13,7 +13,7 @@ class Routes {
     this.Router = this.getRouter(Router);
   }
 
-  add(name, pattern, page) {
+  add(name, pattern, page, canActivate) {
     let options;
     if (name instanceof Object) {
       options = name;
@@ -24,7 +24,7 @@ class Routes {
         pattern = name;
         name = null;
       }
-      options = { name, pattern, page };
+      options = { name, pattern, page, canActivate };
     }
 
     if (this.findByName(name)) {
@@ -71,6 +71,12 @@ class Routes {
   routeGardien(ctx, routeGards, cookies = null) {
     let canAccess = false;
     // let { req, res, route, query } = ctx;
+    console.log('------------');
+    console.log('routtt , ', ctx.route);
+    console.log('quesryy', ctx.query);
+    console.log('ccc', cookies);
+    console.log('gards', routeGards);
+    console.log('------------');
 
     if (routeGards) {
       try {
@@ -81,27 +87,38 @@ class Routes {
         throw e;
       }
     }
-    console.log('appp : ', route);
+    console.log('caaaaaaaaaaaaaaaaaaaaaaaaaaaa : ', !canAccess);
     return !canAccess;
   }
 
   getRequestHandler(app, customHandler, cookiesFetch = null) {
     const nextHandler = app.getRequestHandler();
     return (req, res) => {
-      const { route, query, parsedUrl, canActivate } = this.match(req.url);
+      const { route, query, parsedUrl } = this.match(req.url);
 
-      if (route) {
-        const cookies = cookiesFetch(req);
-        const isActive = this.routeGardien({ req, res, route, query }, canActivate, cookies);
-        if (isActive) {
-          if (customHandler) {
-            customHandler({ req, res, route, query });
-          } else {
-            app.render(req, res, route.page, query);
+      try {
+        if (route) {
+          console.log('****************************');
+          console.log({ route, query, parsedUrl });
+          console.log('****************************');
+          const cookies = cookiesFetch(req);
+          const isActive = this.routeGardien(
+            { req, res, route, query },
+            route.canActivate,
+            cookies
+          );
+          if (isActive) {
+            if (customHandler) {
+              customHandler({ req, res, route, query });
+            } else {
+              app.render(req, res, route.page, query);
+            }
           }
+        } else {
+          nextHandler(req, res, parsedUrl);
         }
-      } else {
-        nextHandler(req, res, parsedUrl);
+      } catch (err) {
+        console.log('get request handler error', err);
       }
     };
   }
