@@ -135,11 +135,10 @@ function (_Component) {
           var isValid = gard();
 
           if (!isValid) {
-            console.error('Link  gard is not valid : ', isValid);
             return;
           }
         } catch (err) {
-          console.error('err gard cheking ');
+          console.error('err gard cheking ', err);
         }
       }
 
@@ -392,14 +391,7 @@ function () {
     key: "routeGardien",
     value: function routeGardien(ctx, routeGards) {
       var cookies = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-      var canAccess = false; // let { req, res, route, query } = ctx;
-
-      console.log('------------');
-      console.log('routtt , ', ctx.route);
-      console.log('quesryy', ctx.query);
-      console.log('ccc', cookies);
-      console.log('gards', routeGards);
-      console.log('------------');
+      var canAccess = false;
 
       if (routeGards) {
         try {
@@ -414,7 +406,6 @@ function () {
         }
       }
 
-      console.log('caaaaaaaaaaaaaaaaaaaaaaaaaaaa : ', !canAccess);
       return !canAccess;
     }
   }, {
@@ -431,13 +422,6 @@ function () {
 
         try {
           if (route) {
-            console.log('****************************');
-            console.log({
-              route: route,
-              query: query,
-              parsedUrl: parsedUrl
-            });
-            console.log('****************************');
             var cookies = universalCookieFetch(req);
 
             var isActive = _this5.routeGardien({
@@ -484,7 +468,6 @@ function () {
 
         if (nameOrUrl) {
           objFindAndGetUrls = _this6.findAndGetUrls(nameOrUrl, params);
-          console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh', objFindAndGetUrls);
           Object.assign(newProps, objFindAndGetUrls.urls);
         }
 

@@ -92,11 +92,10 @@ class MyLink extends Component {
       try {
         const isValid = gard();
         if (!isValid) {
-          console.error('Link  gard is not valid : ', isValid);
           return;
         }
       } catch (err) {
-        console.error('err gard cheking ');
+        console.error('err gard cheking ', err);
       }
     }
 
@@ -269,13 +268,6 @@ class Routes {
   }
   routeGardien(ctx, routeGards, cookies = null) {
     let canAccess = false;
-    // let { req, res, route, query } = ctx;
-    console.log('------------');
-    console.log('routtt , ', ctx.route);
-    console.log('quesryy', ctx.query);
-    console.log('ccc', cookies);
-    console.log('gards', routeGards);
-    console.log('------------');
 
     if (routeGards) {
       try {
@@ -287,7 +279,6 @@ class Routes {
         throw e;
       }
     }
-    console.log('caaaaaaaaaaaaaaaaaaaaaaaaaaaa : ', !canAccess);
     return !canAccess;
   }
 
@@ -299,9 +290,6 @@ class Routes {
 
       try {
         if (route) {
-          console.log('****************************');
-          console.log({ route, query, parsedUrl });
-          console.log('****************************');
           const cookies = universalCookieFetch(req);
           const isActive = this.routeGardien(
             { req, res, route, query },
@@ -332,7 +320,6 @@ class Routes {
       var objFindAndGetUrls = null;
       if (nameOrUrl) {
         objFindAndGetUrls = this.findAndGetUrls(nameOrUrl, params);
-        console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh', objFindAndGetUrls);
         Object.assign(newProps, objFindAndGetUrls.urls);
       }
 
